@@ -32,10 +32,10 @@ func NewAuthConfig() *AuthConfig {
 	jwtSecret := os.Getenv("JWT_SECRET")
 
 	if googleClientID == "" {
-		log.Println("WARNING: GOOGLE_CLIENT_ID not set - auth endpoints will reject all requests")
+		log.Fatal("FATAL: GOOGLE_CLIENT_ID is not set - refusing to start without OAuth configuration")
 	}
 	if jwtSecret == "" {
-		log.Println("WARNING: JWT_SECRET not set - auth endpoints will reject all requests")
+		log.Fatal("FATAL: JWT_SECRET is not set - refusing to start without a signing key")
 	}
 
 	sessionHours, err := strconv.Atoi(os.Getenv("SESSION_DURATION_HOURS"))

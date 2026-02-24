@@ -25,7 +25,11 @@ var upgrader = websocket.Upgrader{
 	ReadBufferSize:  1024,
 	WriteBufferSize: 1024,
 	CheckOrigin: func(r *http.Request) bool {
-		return true // Allow all origins for development
+		allowedOrigin := os.Getenv("ALLOWED_ORIGIN")
+		if allowedOrigin == "" || allowedOrigin == "*" {
+			return true
+		}
+		return r.Header.Get("Origin") == allowedOrigin
 	},
 }
 
@@ -878,6 +882,8 @@ func (h *Handlers) FeedbackHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
+
+	r.Body = http.MaxBytesReader(w, r.Body, 64*1024)
 
 	var feedback Feedback
 	if err := json.NewDecoder(r.Body).Decode(&feedback); err != nil {

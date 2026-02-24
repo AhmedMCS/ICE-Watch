@@ -118,8 +118,7 @@ func (h *Handlers) UserRateLimitMiddleware(next http.HandlerFunc) http.HandlerFu
 			allowed, err := h.redis.CheckIPRateLimit(ctx, ip, h.rateLimitMinutes)
 			if err != nil {
 				log.Printf("Error checking IP rate limit: %v", err)
-				// Fail-open on Redis error
-				next(w, r)
+				http.Error(w, "Service temporarily unavailable", http.StatusServiceUnavailable)
 				return
 			}
 			if !allowed {

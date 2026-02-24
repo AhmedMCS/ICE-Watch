@@ -62,6 +62,10 @@ func main() {
 	handlers := NewHandlers(hub, redisClient, authConfig, rateLimitMinutes)
 	log.Printf("Auth phase: %s", authConfig.AuthPhase)
 
+	if os.Getenv("ALLOWED_ORIGIN") == "" {
+		log.Println("WARNING: ALLOWED_ORIGIN not set - CORS and WebSocket will allow all origins (*)")
+	}
+
 	// Start the hub
 	go hub.Run()
 

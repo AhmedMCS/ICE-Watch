@@ -4,7 +4,11 @@ vendor/
 
 # Build outputs
 backend/main
+backend/campus-watch
 frontend/dist/
+
+# Redis dump
+dump.rdb
 
 # Environment files
 .env
